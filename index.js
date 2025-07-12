@@ -7,6 +7,7 @@ const showMoreButton = document.getElementById("show-more-button");
 
 let searchInput = "";
 let page = 1;
+let searchResultsHTML = "";
 async function searchImages() {
   searchInput = searchInputEl.value;
   const url = `https://api.unsplash.com/search/photos?page=${page}&query=${searchInput}&client_id=${accessKey}`;
@@ -19,20 +20,19 @@ async function searchImages() {
 
   const results = data.results;
 
-  let searchResultsHTML = "";
-
   results.forEach((result) => {
     searchResultsHTML += `
       <div class="search-result">
-        <img
-          src="${result.urls.full}"
-          alt="${result.alt_description}"
-        />
         <a
           href="${result.links.html}"
           target="_blank"
           rel="noopener noreferrer"
-          >${result.alt_description}</a
+          >
+          <img
+            src="${result.urls.full}"
+            alt="${result.alt_description}"
+          />  
+        </a
         >
       </div>
     `;
@@ -47,7 +47,7 @@ async function searchImages() {
 
 formEl.addEventListener("submit", (event) => {
   event.preventDefault();
-
+  searchResultsHTML = "";
   searchImages();
 });
 
