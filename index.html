@@ -4,56 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Image Search App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Syne:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1 id="title">Image Search App</h1>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Creative Explorer</p>
+          <h1 id="title">Search for striking photography in seconds.</h1>
+          <p class="hero-text">
+            Discover visual inspiration with a cleaner, bolder image search
+            experience powered by Unsplash.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <p>Popular ideas</p>
+          <div class="tag-list">
+            <button type="button" class="tag-button">Mountains</button>
+            <button type="button" class="tag-button">Street Style</button>
+            <button type="button" class="tag-button">Ocean</button>
+            <button type="button" class="tag-button">Architecture</button>
+          </div>
+        </div>
+      </header>
 
-    <form>
-      <input type="text" id="search-input" placeholder="Searh for images..." />
-      <button id="search-button">Search</button>
-    </form>
+      <main class="content-shell">
+        <form class="search-form">
+          <label class="sr-only" for="search-input">Search for images</label>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search for images, moods, places..."
+          />
+          <button id="search-button" type="submit">Search</button>
+        </form>
 
-    <div class="search-results">
-      <!-- <div class="search-result">
-        <img
-          src="https://images.unsplash.com/photo-1612916628677-475f676a6adf?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="batman"
-        />
-        <a
-          href="https://unsplash.com/photos/silhouette-of-person-standing-on-the-road-during-night-time-edzVv0hEd7E"
-          target="_blank"
-          rel="noopener noreferrer"
-          >I'm BATMAN</a
-        >
-      </div>
-      <div class="search-result">
-        <img
-          src="https://images.unsplash.com/photo-1612916628677-475f676a6adf?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="batman"
-        />
-        <a
-          href="https://unsplash.com/photos/silhouette-of-person-standing-on-the-road-during-night-time-edzVv0hEd7E"
-          target="_blank"
-          rel="noopener noreferrer"
-          >I'm BATMAN</a
-        >
-      </div>
-      <div class="search-result">
-        <img
-          src="https://images.unsplash.com/photo-1612916628677-475f676a6adf?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="batman"
-        />
-        <a
-          href="https://unsplash.com/photos/silhouette-of-person-standing-on-the-road-during-night-time-edzVv0hEd7E"
-          target="_blank"
-          rel="noopener noreferrer"
-          >I'm BATMAN</a
-        >
-      </div> -->
+        <div class="results-shell is-hidden" id="results-shell">
+          <div class="results-toolbar">
+          <p id="status-text">Try searching for landscapes, food, travel, or fashion.</p>
+          </div>
+
+          <div class="search-results"></div>
+
+          <button id="show-more-button" type="button">Show more</button>
+        </div>
+      </main>
     </div>
-
-    <button id="show-more-button">Show more</button>
 
     <script src="index.js"></script>
   </body>
