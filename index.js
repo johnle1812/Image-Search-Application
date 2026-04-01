@@ -6,6 +6,7 @@ const searchResultsEl = document.querySelector(".search-results");
 const showMoreButton = document.getElementById("show-more-button");
 const statusTextEl = document.getElementById("status-text");
 const tagButtons = document.querySelectorAll(".tag-button");
+const resultsShellEl = document.getElementById("results-shell");
 
 let searchInput = "";
 let page = 1;
@@ -15,16 +16,20 @@ const renderEmptyState = (message) => {
   searchResultsEl.innerHTML = `<div class="empty-state">${message}</div>`;
 };
 
+const showResultsShell = () => {
+  resultsShellEl.classList.remove("is-hidden");
+};
+
 async function searchImages() {
   searchInput = searchInputEl.value.trim();
 
   if (!searchInput) {
+    resultsShellEl.classList.add("is-hidden");
     showMoreButton.style.display = "none";
-    statusTextEl.textContent = "Enter a search term to explore fresh image results.";
-    renderEmptyState("Start with a search to load images here.");
     return;
   }
 
+  showResultsShell();
   statusTextEl.textContent = `Searching for "${searchInput}"...`;
   const url = `https://api.unsplash.com/search/photos?page=${page}&query=${searchInput}&client_id=${accessKey}`;
 
@@ -95,5 +100,3 @@ tagButtons.forEach((button) => {
     searchImages();
   });
 });
-
-renderEmptyState("Search for a theme, color, mood, or destination to begin.");
