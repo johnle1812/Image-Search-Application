@@ -10,7 +10,7 @@ const resultsShellEl = document.getElementById("results-shell");
 
 let searchInput = "";
 let page = 1;
-let searchResultsHTML = "";
+let totalResultsShown = 0;
 
 const renderEmptyState = (message) => {
   searchResultsEl.innerHTML = `<div class="empty-state">${message}</div>`;
@@ -18,6 +18,28 @@ const renderEmptyState = (message) => {
 
 const showResultsShell = () => {
   resultsShellEl.classList.remove("is-hidden");
+};
+
+const createResultCard = (result) => {
+  const photographer = result.user?.name || "Unknown creator";
+
+  return `
+    <div class="search-result">
+      <a
+        href="${result.links.html}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src="${result.urls.regular}"
+          alt="${result.alt_description || "Unsplash image"}"
+        />
+        <div class="result-copy">
+          <p class="result-meta">Photo by ${photographer}</p>
+        </div>
+      </a>
+    </div>
+  `;
 };
 
 async function searchImages() {
@@ -31,54 +53,55 @@ async function searchImages() {
 
   showResultsShell();
   statusTextEl.textContent = `Searching for "${searchInput}"...`;
-  const url = `https://api.unsplash.com/search/photos?page=${page}&query=${searchInput}&client_id=${accessKey}`;
+  showMoreButton.disabled = true;
+  showMoreButton.textContent = "Loading...";
 
-  const response = await fetch(url);
-  const data = await response.json();
-  if (page === 1) {
-    searchResultsHTML = "";
-    searchResultsEl.innerHTML = "";
-  }
+  try {
+    const url = `https://api.unsplash.com/search/photos?page=${page}&query=${encodeURIComponent(searchInput)}&client_id=${accessKey}`;
+    const response = await fetch(url);
 
-  const results = data.results;
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
 
-  if (!results.length && page === 1) {
+    const data = await response.json();
+    const results = data.results || [];
+
+    if (page === 1) {
+      totalResultsShown = 0;
+      searchResultsEl.innerHTML = "";
+    }
+
+    if (!results.length && page === 1) {
+      showMoreButton.style.display = "none";
+      statusTextEl.textContent = `No results found for "${searchInput}".`;
+      renderEmptyState("No images matched that search. Try another keyword or style.");
+      return;
+    }
+
+    if (!results.length && page > 1) {
+      showMoreButton.style.display = "none";
+      statusTextEl.textContent = `You've reached the end of the results for "${searchInput}".`;
+      return;
+    }
+
+    const cardsHTML = results.map(createResultCard).join("");
+    searchResultsEl.insertAdjacentHTML("beforeend", cardsHTML);
+    totalResultsShown += results.length;
+
+    statusTextEl.textContent = `Showing ${totalResultsShown} result${
+      totalResultsShown === 1 ? "" : "s"
+    } for "${searchInput}".`;
+
+    showMoreButton.style.display = results.length > 0 ? "block" : "none";
+  } catch (error) {
     showMoreButton.style.display = "none";
-    statusTextEl.textContent = `No results found for "${searchInput}".`;
-    renderEmptyState("No images matched that search. Try another keyword or style.");
-    return;
-  }
-
-  results.forEach((result) => {
-    const photographer = result.user?.name || "Unknown creator";
-
-    searchResultsHTML += `
-      <div class="search-result">
-        <a
-          href="${result.links.html}"
-          target="_blank"
-          rel="noopener noreferrer"
-          >
-          <img
-            src="${result.urls.regular}"
-            alt="${result.alt_description || "Unsplash image"}"
-          />  
-          <div class="result-copy">
-            <p class="result-meta">Photo by ${photographer}</p>
-          </div>
-        </a
-        >
-      </div>
-    `;
-  });
-
-  searchResultsEl.innerHTML = searchResultsHTML;
-  statusTextEl.textContent = `Showing ${searchResultsEl.children.length} result${
-    searchResultsEl.children.length === 1 ? "" : "s"
-  } for "${searchInput}".`;
-
-  if (results.length > 0) {
-    showMoreButton.style.display = "block";
+    statusTextEl.textContent = "Something went wrong while loading images.";
+    renderEmptyState("The search request failed. Please try again in a moment.");
+    console.error(error);
+  } finally {
+    showMoreButton.disabled = false;
+    showMoreButton.textContent = "Show more";
   }
 }
 
