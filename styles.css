@@ -151,14 +151,14 @@ body {
 #search-button,
 #show-more-button {
   border: none;
-  border-radius: 999px;
+  border-radius: 10px;
   padding: 14px 22px;
   font-weight: 700;
   color: white;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
   background: var(--accent-strong);
-  box-shadow: 0 14px 28px rgba(35, 91, 255, 0.3);
+  box-shadow: none;
 }
 
 #search-button:hover,
